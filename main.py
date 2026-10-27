@@ -790,7 +790,7 @@ def groq_summarize_item(it: Dict[str, Any]) -> str:
         return summarize_item_locally(it)
 
     ctx = build_item_context(it)
-    url = "https://api.groq.com/openai/v1/chat/completions"
+    url = os.getenv("GROQ_URL", "https://api.groq.com/openai/v1/chat/completions")
     headers = {
         "Authorization": f"Bearer {GROQ_API_KEY}",
         "Content-Type": "application/json",
