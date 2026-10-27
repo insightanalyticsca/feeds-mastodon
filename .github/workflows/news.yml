@@ -43,7 +43,7 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GROQ_URL: ${{ secrets.GROQ_URL }}
           GROQ_MODEL: qwen/qwen3.8-27b
-          GROQ_MAX_OUTPUT_TOKENS: "1500"
+          GROQ_MAX_OUTPUT_TOKENS: "2500"
         run: python main.py
 
       - name: Commit state updates
