@@ -1,0 +1,40 @@
+name: Feed Groq summaries to Mastodon
+
+on:
+  schedule:
+    # Every 2 hours, offset from the top of the hour to reduce queue congestion.
+    - cron: '23 */2 * * *'
+  workflow_dispatch:  # manual trigger from the Actions tab
+
+permissions:
+  contents: read
+
+concurrency:
+  group: feed-mastodon
+  cancel-in-progress: false
+
+jobs:
+  post-digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run feed worker
+        env:
+          # Groq: route through the Netlify edge function proxy (holds the key,
+          # works from any IP). Set GROQ_PROXY_URL OR GROQ_API_KEY (not both).
+          GROQ_PROXY_URL: ${{ secrets.GROQ_PROXY_URL }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_MODEL: qwen/qwen3.8-27b
+          # Mastodon:
+          MASTODON_INSTANCE: ${{ secrets.MASTODON_INSTANCE }}
+          MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
+        run: python scripts/feed_mastodon_worker.py --max-articles 15 --max-posts 3
