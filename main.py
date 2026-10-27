@@ -85,7 +85,7 @@ DEBUG_FEEDS = os.getenv("DEBUG_FEEDS", "0") == "1"
 # Groq (optional; if unset, we use local heuristics)
 GROQ_API_KEY  = os.getenv("GROQ_API_KEY")
 GROQ_MODEL    = os.getenv("GROQ_MODEL", "qwen/qwen3.8-27b")
-GROQ_MAX_COMPLETION_TOKENS = int(os.getenv("GROQ_MAX_OUTPUT_TOKENS", "320"))
+GROQ_MAX_COMPLETION_TOKENS = int(os.getenv("GROQ_MAX_OUTPUT_TOKENS", "1500"))
 GROQ_SYSTEM_PROMPT = os.getenv(
     "GROQ_SYSTEM_PROMPT",
     (
@@ -809,6 +809,8 @@ def groq_summarize_item(it: Dict[str, Any]) -> str:
                     "• Не используй английские слова, фразы и транслитерацию "
                     "(кроме общепринятых аббревиатур вроде ООН, ЕС, НАТО, МВФ, ВТО, БРИКС).\n"
                     "• 3–4 логически правильных, емких параграфов, отражающих главные мысли публикации.\n"
+                    "• Если текст короткий или неполный (часто в Telegram-постах),\n"
+                    "  делай ёмкий конспект из 2-3 предложений. НЕ пиши «отсутствует текст».\n"
                     "• Не повторяй одну и ту же мысль разными словами.\n"
                     "• Только факты из текста, без домыслов и оценок.\n"
                     "• Без списков, эмодзи, хэштегов и обращений к читателю.\n\n"
@@ -821,6 +823,7 @@ def groq_summarize_item(it: Dict[str, Any]) -> str:
         "n": 1,
         "max_completion_tokens": GROQ_MAX_COMPLETION_TOKENS,
         "stream": False,
+        
     }
 
     for _ in range(3):
