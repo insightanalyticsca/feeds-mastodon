@@ -1,6 +1,4 @@
-# No external pip dependencies — the worker uses only the Python standard
-# library (urllib, xml.etree.ElementTree, json, concurrent.futures).
-# feedparser is NOT needed — the worker has its own RSS/Atom parser.
-#
-# If you prefer feedparser for more robust RSS parsing, uncomment:
-# feedparser>=6.0.10,<6.1
+Flask==3.0.3
+gunicorn==22.0.0
+feedparser>=6.0.10,<6.1
+requests>=2.31.0,<3
