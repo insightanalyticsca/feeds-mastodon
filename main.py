@@ -820,6 +820,7 @@ def groq_summarize_item(it: Dict[str, Any]) -> str:
         "temperature": 0.0,
         "n": 1,
         "max_completion_tokens": GROQ_MAX_COMPLETION_TOKENS,
+        "stream": False,
     }
 
     for _ in range(3):
