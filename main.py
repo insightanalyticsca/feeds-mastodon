@@ -828,7 +828,7 @@ def groq_summarize_item(it: Dict[str, Any]) -> str:
 
     for _ in range(3):
         try:
-            r = requests.post(url, headers=headers, json=payload, timeout=12)
+            r = requests.post(url, headers=headers, json=payload, timeout=45)
             if r.status_code == 429:
                 # rate limit → подождать и попробовать ещё раз
                 delay = min(5, max(1, int(r.headers.get("retry-after", "2"))))
@@ -841,7 +841,7 @@ def groq_summarize_item(it: Dict[str, Any]) -> str:
             if cleaned:
                 return cleaned
         except Exception:
-            time.sleep(0.8)
+            time.sleep(2)
 
     # Фоллбек — лаконичный русский текст без перевода
     return summarize_item_locally(it)
